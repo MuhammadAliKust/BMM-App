@@ -22,7 +22,6 @@ import 'package:efood_multivendor/util/styles.dart';
 import 'package:efood_multivendor/view/base/custom_app_bar.dart';
 import 'package:efood_multivendor/view/base/custom_button.dart';
 import 'package:efood_multivendor/view/base/custom_snackbar.dart';
-import 'package:efood_multivendor/view/base/my_text_field.dart';
 import 'package:efood_multivendor/view/base/not_logged_in_screen.dart';
 import 'package:efood_multivendor/view/screens/address/widget/address_widget.dart';
 import 'package:efood_multivendor/view/screens/cart/widget/delivery_option_button.dart';
@@ -122,7 +121,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 List<AddressModel> _addressList = [];
                 _addressList
                     .add(Get.find<LocationController>().getUserAddress());
-
+                print("Address List : ${_addressList.length}");
                 if (restController.restaurant != null) {
                   if (locationController.addressList != null) {
                     for (int index = 0;
@@ -144,12 +143,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       restController.restaurant.schedules);
                   _taxPercent = restController.restaurant.tax;
                 }
-                
+
                 return GetBuilder<CouponController>(
                     builder: (couponController) {
                   return GetBuilder<OrderController>(
                       builder: (orderController) {
-
                     double _deliveryCharge = -1;
                     double _charge = -1;
                     if (restController.restaurant != null &&
@@ -417,7 +415,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                                 )),
                                                             // InkWell(
                                                             //   onTap: () async {
-                                                            //
+                                                            //     print(_addressList.length);
+                                                            //     return;
+                                                            //     Get.dialog(
+                                                            //       AddressDialogue(
+                                                            //           addressList:
+                                                            //           _addressList,
+                                                            //           streetNumberController:
+                                                            //           _streetNumberController,
+                                                            //           houseController:
+                                                            //           _houseController,
+                                                            //           floorController:
+                                                            //           _floorController),
+                                                            //     );
                                                             //   },
                                                             //   child: Padding(
                                                             //     padding:
@@ -449,7 +459,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                       SizedBox(
                                                         height: 10,
                                                       ),
-
                                                       ListView.builder(
                                                           physics:
                                                               NeverScrollableScrollPhysics(),
@@ -459,58 +468,50 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                                                   .length,
                                                           itemBuilder:
                                                               (context, index) {
-                                                            if(index == 0){
-                                                              return SizedBox();
-                                                            }else{
+                                                                return AddressWidget(
+                                                                    onTap: () {
+                                                                      selectedIndex =
+                                                                          index;
+                                                                      setState(
+                                                                              () {});
+                                                                      Get.find<
+                                                                          OrderController>()
+                                                                          .getDistanceInMeter(
+                                                                        LatLng(
+                                                                          double.parse(
+                                                                              _addressList[index].latitude),
+                                                                          double.parse(
+                                                                              _addressList[index].longitude),
+                                                                        ),
+                                                                        LatLng(
+                                                                          double.parse(Get.find<RestaurantController>()
+                                                                              .restaurant
+                                                                              .latitude),
+                                                                          double.parse(Get.find<RestaurantController>()
+                                                                              .restaurant
+                                                                              .longitude),
+                                                                        ),
+                                                                      );
+                                                                      Get.find<
+                                                                          OrderController>()
+                                                                          .setAddressIndex(
+                                                                          index);
+                                                                      // streetNumberController.text = _addressList[index].road ?? '';
+                                                                      // houseController.text = _addressList[index].house ?? '';
+                                                                      // floorController.text = _addressList[index].floor ?? '';
 
-                                                              return AddressWidget(
-                                                                  onTap: () {
-                                                                    selectedIndex =
-                                                                        index;
-                                                                    setState(
-                                                                            () {});
-                                                                    Get.find<
-                                                                        OrderController>()
-                                                                        .getDistanceInMeter(
-                                                                      LatLng(
-                                                                        double.parse(
-                                                                            _addressList[index]
-                                                                                .latitude),
-                                                                        double.parse(
-                                                                            _addressList[index]
-                                                                                .longitude),
-                                                                      ),
-                                                                      LatLng(
-                                                                        double.parse(Get.find<
-                                                                            RestaurantController>()
-                                                                            .restaurant
-                                                                            .latitude),
-                                                                        double.parse(Get.find<
-                                                                            RestaurantController>()
-                                                                            .restaurant
-                                                                            .longitude),
-                                                                      ),
-                                                                    );
-                                                                    Get.find<
-                                                                        OrderController>()
-                                                                        .setAddressIndex(
-                                                                        index);
-                                                                    // streetNumberController.text = _addressList[index].road ?? '';
-                                                                    // houseController.text = _addressList[index].house ?? '';
-                                                                    // floorController.text = _addressList[index].floor ?? '';
-
-                                                                    // Get.back();
-                                                                  },
-                                                                  isSelected:
-                                                                  index == selectedIndex,
-                                                                  address:
-                                                                  _addressList[
-                                                                  index],
-                                                                  fromAddress:
-                                                                  false,
-                                                                  fromCheckout:
-                                                                  true);
-                                                            }
+                                                                      // Get.back();
+                                                                    },
+                                                                    isSelected:
+                                                                    index ==
+                                                                        selectedIndex,
+                                                                    address:
+                                                                    _addressList[
+                                                                    index],
+                                                                    fromAddress:
+                                                                    false,
+                                                                    fromCheckout:
+                                                                    true);
                                                           }),
                                                       SizedBox(
                                                         height: 20,
@@ -1414,7 +1415,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                       ]),
                                 )),
                               ))),
-
                               Container(
                                 width: Dimensions.WEB_MAX_WIDTH,
                                 alignment: Alignment.center,
@@ -1494,9 +1494,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           }
                                           // if (
                                           //    ) {
-                                          if (
-                                              orderController.addressIndex <
-                                                 1) {
+                                          if (orderController.addressIndex <
+                                              1) {
                                             showCustomSnackBar(
                                                 'Kindly select delivery address or add new one.'
                                                     .tr);

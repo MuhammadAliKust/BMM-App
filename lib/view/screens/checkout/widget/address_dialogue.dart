@@ -16,6 +16,7 @@ class AddressDialogue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Address List from Dialog : ${addressList.length}");
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL)),
       insetPadding: EdgeInsets.all(30),
